@@ -1,8 +1,8 @@
-tu <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Someone turning 18 omg🥹💖</title>
+<title>Birthday Surprise 💖</title>
 <style>
 body {
     margin: 0;
@@ -13,9 +13,10 @@ body {
     align-items: center;
     height: 100vh;
     overflow: hidden;
+    position: relative;
 }
 
-/* Card for everything */
+/* Main card */
 .card {
     background: white;
     padding: 20px;
@@ -23,46 +24,15 @@ body {
     text-align: center;
     box-shadow: 0 20px 40px rgba(0,0,0,0.15);
     width: 350px;
-    z-index: 2;
+    max-height: 90vh;
+    overflow: hidden;
+    position: relative;
 }
 
 /* Titles */
 h1 {
     color: #ff4081;
-}
-
-/* Slideshow */
-.slideshow {
-    position: relative;
-    width: 100%;
-    height: 220px;
-    border-radius: 15px;
-    overflow: hidden;
-    margin: 15px 0;
-    display: none; /* hide initially */
-}
-
-.slideshow img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 1s ease;
-}
-
-.slideshow img.active {
-    opacity: 1;
-}
-
-.lyrics {
-    position: absolute;
-    bottom: 15px;
-    width: 100%;
-    text-align: center;
-    font-size: 16px;
-    color: white;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    margin-bottom: 10px;
 }
 
 /* Countdown */
@@ -90,9 +60,47 @@ button {
     border-radius: 25px;
     font-size: 16px;
     cursor: pointer;
+    margin-top: 10px;
 }
 
-/* ❤️ Floating hearts */
+/* Slideshow */
+.slideshow {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 15px 0;
+    display: none;
+}
+
+.slideshow img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.slideshow img.active {
+    opacity: 1;
+}
+
+.lyrics {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+
+/* Floating hearts */
 .heart {
     position: fixed;
     bottom: -10px;
@@ -100,53 +108,100 @@ button {
     animation: floatUp 5s linear forwards;
 }
 
-@keyframes floatUp {
-    from { transform: translateY(0); opacity: 1; }
-    to { transform: translateY(-100vh); opacity: 0; }
+/* Floating balloons */
+.balloon {
+    position: fixed;
+    bottom: -60px;
+    width: 40px;
+    height: 60px;
+    background: red;
+    border-radius: 50% 50% 50% 50%;
+    opacity: 0.8;
+    animation: rise 8s linear forwards;
+}
+@keyframes rise {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-120vh) rotate(360deg); }
 }
 
-/* Custom message */
+/* Confetti */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    animation: confettiFall 3s linear forwards;
+    opacity: 0.9;
+}
+@keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+/* Sparkles */
+.sparkle {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    background: yellow;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: sparkleAnim 1.5s linear infinite;
+}
+@keyframes sparkleAnim {
+    0% { transform: translate(0,0) scale(1); opacity: 0.8; }
+    50% { transform: translate(5px,-5px) scale(1.5); opacity: 0.3; }
+    100% { transform: translate(0,0) scale(1); opacity: 0.8; }
+}
+
+/* Envelope */
 #customMessage {
     display: none;
     text-align: left;
     margin-top: 15px;
-    max-height: 200px;
+    max-height: 250px;
     overflow-y: auto;
     font-size: 14px;
-    padding: 10px;
-    border: 1px solid #ffb6c1;
+    padding: 15px;
+    border: 2px dashed #ffb6c1;
     border-radius: 15px;
     background: #fff0f5;
+    position: relative;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 1s ease-out;
+}
+#customMessage::before, #customMessage::after {
+    content: "";
+    position: absolute;
+    width: 0; height: 0;
+    border-style: solid;
+}
+#customMessage::before {
+    top: -20px;
+    left: 50%;
+    border-width: 0 20px 20px 20px;
+    border-color: transparent transparent #fff0f5 transparent;
+    transform: translateX(-50%);
+}
+#customMessage::after {
+    bottom: -20px;
+    left: 50%;
+    border-width: 20px 20px 0 20px;
+    border-color: #fff0f5 transparent transparent transparent;
+    transform: translateX(-50%);
 }
 </style>
 </head>
 <body>
 
-<!-- 🎵 Audio -->
 <audio id="bgMusic" loop>
     <source src="./love.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Welcome Card -->
-<div class="card" id="welcomeCard">
-    <h1>💌 Surprise!</h1>
-    <p>Hello my Pearluu,</p>
-    <p>Click below to see your birthday surprise!</p>
-    <button onclick="startBirthday()">Open 💖</button>
-</div>
-
-<!-- Birthday Card -->
-<div class="card" id="birthdayCard" style="display:none;">
-    <h1 id="title">Happy Birthday Pearluu 🎂</h1>
-
-    <div class="slideshow">
-        <img src="./img1.jpg" class="active">
-        <img src="./img2.jpg">
-        <img src="./img3.jpg">
-        <img src="./img4.jpg">
-        <div class="lyrics" id="lyricsText"></div>
-    </div>
-
+<div class="card" id="mainCard">
+    <h1 id="mainTitle">Omg someone is turning 18 🥹❤️</h1>
+    
     <div class="countdown">
         <div class="time"><span id="days">0</span>d</div>
         <div class="time"><span id="hours">0</span>h</div>
@@ -154,18 +209,39 @@ button {
         <div class="time"><span id="seconds">0</span>s</div>
     </div>
 
+    <button id="mainButton" disabled>Wait for the timer ⏳</button>
+
+    <div class="slideshow">
+        <img src="./Img1.jpg" class="active">
+        <img src="./Img2.jpg">
+        <img src="./Img3.jpg">
+        <img src="./Img4.jpg">
+        <div class="lyrics" id="lyricsText"></div>
+    </div>
+
     <div id="customMessage">
-Hi my pearlu,
-Tired. Done with life. But NAAAACHOOOOOO ITS MY PAALUS 18TH BIRTHDAY SLAYYYYYY. Happiessttt 18th birthday my moonlight. Sad that im no more part of your life. I desperately want you to be mine for life but k. You've always been bestest person. You've always been sweetest person even when I used to yell. You'll always be the person that ill adore. Plus I learnt sm things from you. This is genuinely coming from my heart I was different person when I met you and different person now(in good terms). At times I was toxic i agree infact we were equally.  And rn you can call me happiest person on this planet earth cuz im talking to you, more like luckiest person that I met you. You genuinely shaped me to a better person. You actually were in my lows and highs. Honestly I had goals in life cuz i had a reason which is you i save money, study hard, and and from a failure student you brought me to a guy scoring 81%. And i genuinely like actually give you the credit and bro idk how to keep paragraph platonic. And today write this bohot time im taking not jus 1day. And spending most of my time on gallery. Omg youre gon get soo annoyed. I could honestly write a book on you. Like actually yk I wrote poems and all fy. Also do you rem "her" song ka open verse that also I wrote kuch but its cringy ig if you read till here then you can ask if you want. But dont think like when I was dating kuch nahi ki. I've done its jus we're in phase toh hota hai but I didn't forget what you did. Pls youre gon be soo mad.
-Yabaaaaa soo sorry but honestly ya idk why I jus cant let you go means ke I cant afford to lose you. Idk your pov but ya tu hai yaar best. Idk bro muje bohot bura lag raha hai ki we're slowly getting apart like actually. We had pure intentions yet still it had to end aur kya karu. And honestly now im a different person or can say the person who you fell for i mean I tried. Like thought I was trying I wasnt lying but k. Anyways bro kaha agaya mai😭😭😭. Ya so tu hai best and gifts ka I wan give only cuz now its cold right hm. Then el aur hai which will reveal on that day only even this paragraph.
-Anyways. 
-You've got beautiful eyes, the eyes has chotu si world and mine has your beauty.
-Apki zulfein samundar si which hides your ear rings. You actually lightened up my life how you expect me to let you go man😭😭. Youre part of my life actually my whol point of life to live. Im a open lonely night ki sky and you are like the stars in the sky. Omg comparison see. Heheh youre way too perfect for me man idk but I dont wan say but ya loads of love for youuuu. I love you till the ocean runs dry. And once again Happiest 18th birthday youre the bestestt of bestest. The beauty you carry is like way beyond the definition of beautiful. You are the prettiest sweetest and ANNOYINGIEST person I ever met pls ilysm byiiieueeeee.
+<p>Hi my pearlu,</p>
+<p>Tired. Done with life. But NAAAACHOOOOOO ITS MY PAALUS 18TH BIRTHDAY SLAYYYYYY. Happiessttt 18th birthday my moonlight. Sad that im no more part of your life. I desperately want you to be mine for life but k. You've always been bestest person. You've always been sweetest person even when I used to yell. You'll always be the person that ill adore. Plus I learnt sm things from you. This is genuinely coming from my heart I was different person when I met you and different person now (in good terms).</p>
+<p>At times I was toxic i agree infact we were equally.  And rn you can call me happiest person on this planet earth cuz im talking to you, more like luckiest person that I met you. You genuinely shaped me to a better person. You actually were in my lows and highs. Honestly I had goals in life cuz i had a reason which is you i save money, study hard, and and from a failure student you brought me to a guy scoring 81%.</p>
+<p>And i genuinely like actually give you the credit and bro idk how to keep paragraph platonic. And today write this bohot time im taking not jus 1day. And spending most of my time on gallery. Omg youre gon get soo annoyed. I could honestly write a book on you. Like actually yk I wrote poems and all fy. Also do you rem "her" song ka open verse that also I wrote kuch but its cringy ig if you read till here then you can ask if you want.</p>
+<p>But dont think like when I was dating kuch nahi ki. I've done its jus we're in phase toh hota hai but I didn't forget what you did. Pls youre gon be soo mad.</p>
+<p>Yabaaaaa soo sorry but honestly ya idk why I jus cant let you go means ke I cant afford to lose you. Idk your pov but ya tu hai yaar best. Idk bro muje bohot bura lag raha hai ki we're slowly getting apart like actually. We had pure intentions yet still it had to end aur kya karu.</p>
+<p>And honestly now im a different person or can say the person who you fell for i mean I tried. Like thought I was trying I wasnt lying but k. Anyways bro kaha agaya mai😭😭😭. Ya so tu hai best and gifts ka I wan give only cuz now its cold right hm. Then el aur hai which will reveal on that day only even this paragraph.</p>
+<p>Anyways. You've got beautiful eyes, the eyes has chotu si world and mine has your beauty. Apki zulfein samundar si which hides your ear rings. You actually lightened up my life how you expect me to let you go man😭😭. Youre part of my life actually my whol point of life to live. Im a open lonely night ki sky and you are like the stars in the sky.</p>
+<p>Omg comparison see. Heheh youre way too perfect for me man idk but ya loads of love for youuuu. I love you till the ocean runs dry. And once again Happiest 18th birthday youre the bestestt of bestest. The beauty you carry is like way beyond the definition of beautiful. You are the prettiest sweetest and ANNOYINGIEST person I ever met pls ilysm byiiieueeeee 💖</p>
     </div>
 </div>
 
 <script>
-const birthday = new Date("2026-01-12T00:00:00").getTime();
+// Elements
+const daysEl = document.getElementById("days");
+const hoursEl = document.getElementById("hours");
+const minutesEl = document.getElementById("minutes");
+const secondsEl = document.getElementById("seconds");
+const mainButton = document.getElementById("mainButton");
+const mainTitle = document.getElementById("mainTitle");
+const bgMusic = document.getElementById("bgMusic");
+const slideshow = document.querySelector(".slideshow");
 const images = document.querySelectorAll(".slideshow img");
 const lyricsLines = [
     "Take my hand…",
@@ -175,84 +251,148 @@ const lyricsLines = [
 ];
 
 let imgIndex = 0;
-let lyricIndex = 0;
-let started = false;
+let step = 0;
 
-// Typing lyrics
-function typeLine(text) {
-    const lyricsText = document.getElementById("lyricsText");
-    lyricsText.innerText = "";
-    let i = 0;
-    const interval = setInterval(() => {
-        lyricsText.innerText += text.charAt(i);
+// Countdown
+const birthday = new Date("2026-01-12T00:00:00").getTime();
+const timerInterval = setInterval(()=>{
+    const now = new Date().getTime();
+    const diff = birthday - now;
+    if(diff<=0){
+        daysEl.innerText=0; hoursEl.innerText=0; minutesEl.innerText=0; secondsEl.innerText=0;
+        mainButton.disabled = false;
+        mainButton.innerText = "Click me 🎉";
+        clearInterval(timerInterval);
+        return;
+    }
+    daysEl.innerText = Math.floor(diff/(1000*60*60*24));
+    hoursEl.innerText = Math.floor((diff/(1000*60*60))%24);
+    minutesEl.innerText = Math.floor((diff/(1000*60))%60);
+    secondsEl.innerText = Math.floor((diff/1000)%60);
+},1000);
+
+// Typewriter
+function typeLine(target,text,speed=20){
+    target.innerText = "";
+    let i=0;
+    const interval = setInterval(()=>{
+        target.innerText += text.charAt(i);
         i++;
-        if (i >= text.length) clearInterval(interval);
-    }, 70);
+        if(i>=text.length) clearInterval(interval);
+    },speed);
 }
 
 // Hearts
-function createHeart() {
+function createHeart(){
     const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerText = "💖";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = (16 + Math.random() * 20) + "px";
+    heart.className="heart";
+    heart.innerText="💖";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=(16+Math.random()*20)+"px";
     document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 5000);
+    setTimeout(()=>heart.remove(),5000);
 }
 
-// Countdown
-const daysEl = document.getElementById("days");
-const hoursEl = document.getElementById("hours");
-const minutesEl = document.getElementById("minutes");
-const secondsEl = document.getElementById("seconds");
-const titleEl = document.getElementById("title");
-const customMessage = document.getElementById("customMessage");
+// Confetti
+function createConfetti(){
+    const confetti = document.createElement("div");
+    confetti.className="confetti";
+    confetti.style.left=Math.random()*100+"vw";
+    confetti.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
+    document.body.appendChild(confetti);
+    setTimeout(()=>confetti.remove(),3000);
+}
 
-setInterval(() => {
-    const now = new Date().getTime();
-    const diff = birthday - now;
+// Balloons
+function createBalloon(){
+    const balloon = document.createElement("div");
+    balloon.className="balloon";
+    balloon.style.backgroundColor=`hsl(${Math.random()*360},100%,50%)`;
+    balloon.style.left=Math.random()*100+"vw";
+    document.body.appendChild(balloon);
+    setTimeout(()=>balloon.remove(),8000);
+}
 
-    if (diff <= 0) {
-        titleEl.innerText = "🎉 Happy Birthday My Love 💖";
-        return;
+// Sparkles
+function createSparkle(){
+    const sparkle = document.createElement("div");
+    sparkle.className="sparkle";
+    sparkle.style.left=Math.random()*100+"vw";
+    sparkle.style.top=Math.random()*100+"vh";
+    sparkle.style.width = sparkle.style.height = (2+Math.random()*4)+"px";
+    sparkle.style.background = `hsl(${Math.random()*360},100%,90%)`;
+    document.body.appendChild(sparkle);
+    setTimeout(()=>sparkle.remove(),1500);
+}
+
+// Step button logic
+mainButton.addEventListener("click",()=>{
+    step++;
+    switch(step){
+        case 1:
+            mainTitle.innerText = "Happy Birthday Pearluu 🎂";
+            mainButton.innerText = "Click for decorations";
+            break;
+        case 2:
+            mainTitle.innerText = "✨ Decorations everywhere ✨";
+            mainButton.innerText = "Click for balloons";
+            break;
+        case 3:
+            mainTitle.innerText = "🎈 Balloons floating 🎈";
+            mainButton.innerText = "Click for cake";
+            setInterval(createBalloon,1200);
+            break;
+        case 4:
+            mainTitle.innerText = "🍰 Cake time! 🍰";
+            mainButton.innerText = "Click for surprise";
+            setInterval(createConfetti,100);
+            break;
+        case 5:
+            mainTitle.innerText = "💖 Surprise!";
+            mainButton.style.display="none";
+            slideshow.style.display="block";
+
+            // Music fade-in
+            let vol=0;
+            bgMusic.volume=0;
+            bgMusic.play().catch(()=>{});
+            const fadeIn = setInterval(()=>{
+                vol+=0.02;
+                if(vol>=1){vol=1; clearInterval(fadeIn);}
+                bgMusic.volume = vol;
+            },100);
+
+            typeLine(document.getElementById("lyricsText"),lyricsLines[0]);
+            setInterval(createHeart,800);
+            setInterval(()=>{
+                images[imgIndex].classList.remove("active");
+                imgIndex=(imgIndex+1)%images.length;
+                images[imgIndex].classList.add("active");
+                typeLine(document.getElementById("lyricsText"),lyricsLines[imgIndex]);
+            },3500);
+
+            // Sparkles everywhere
+            setInterval(createSparkle,200);
+
+            const msgBtn = document.createElement("button");
+            msgBtn.innerText = "📜 Click for message";
+            document.querySelector(".card").appendChild(msgBtn);
+            msgBtn.addEventListener("click",()=>{
+                const msgDiv = document.getElementById("customMessage");
+                msgDiv.style.display="block";
+                msgDiv.style.transform="scaleY(1)";
+                msgBtn.style.display="none";
+                typeLine(msgDiv,msgDiv.innerText,10);
+            });
+            break;
     }
+});
 
-    daysEl.innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-    hoursEl.innerText = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    minutesEl.innerText = Math.floor((diff / (1000 * 60)) % 60);
-    secondsEl.innerText = Math.floor((diff / 1000) % 60);
-}, 1000);
-
-// Start the birthday surprise
-function startBirthday() {
-    if (started) return;
-    started = true;
-
-    document.getElementById("welcomeCard").style.display = "none";
-    const birthdayCard = document.getElementById("birthdayCard");
-    birthdayCard.style.display = "block";
-
-    document.querySelector(".slideshow").style.display = "block";
-    customMessage.style.display = "block";
-
-    const bgMusic = document.getElementById("bgMusic");
-    bgMusic.play().catch(()=>{}); // mobile autoplay may block without click
-
-    typeLine(lyricsLines[0]);
-    setInterval(createHeart, 800);
-
-    setInterval(() => {
-        images[imgIndex].classList.remove("active");
-        imgIndex = (imgIndex + 1) % images.length;
-        images[imgIndex].classList.add("active");
-
-        typeLine(lyricsLines[lyricIndex]);
-        lyricIndex = (lyricIndex + 1) % lyricsLines.length;
-    }, 3500);
-}
+// Stop music when leaving
+window.addEventListener("beforeunload",()=>{
+    bgMusic.pause();
+    bgMusic.currentTime=0;
+});
 </script>
-
 </body>
 </html>
-
