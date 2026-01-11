@@ -37,6 +37,7 @@ h1 {
     border-radius: 15px;
     overflow: hidden;
     margin: 15px 0;
+    display: none;
 }
 
 .slideshow img {
@@ -85,9 +86,23 @@ button {
     border-radius: 25px;
     font-size: 16px;
     cursor: pointer;
+    display: none;
 }
 
-/* ❤️ Floating hearts */
+.custom-message {
+    display: none;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+    background: #fff0f6;
+    padding: 15px;
+    border-radius: 15px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+/* Floating hearts */
 .heart {
     position: fixed;
     bottom: -10px;
@@ -104,33 +119,71 @@ button {
 
 <body>
 
-<!-- 🎵 Audio -->
 <audio id="bgMusic" loop>
-    <source src="./love.mp3" type="audio/mpeg">
+    <source src="love.mp3" type="audio/mpeg">
 </audio>
 
 <div class="card">
     <h1 id="title">Happy Birthday Pearluu 🎂</h1>
 
-    <div class="slideshow">
-        <img src="./img1.jpg" class="active">
-        <img src="./img2.jpg">
-        <img src="./img3.jpg">
-        <img src="./img4.jpg">
-        <div class="lyrics" id="lyricsText"></div>
-    </div>
-
-    <div class="countdown">
+    <div class="countdown" id="countdown">
         <div class="time"><span id="days">0</span>d</div>
         <div class="time"><span id="hours">0</span>h</div>
         <div class="time"><span id="minutes">0</span>m</div>
         <div class="time"><span id="seconds">0</span>s</div>
     </div>
 
-    <button onclick="startLove()">💖 For You</button>
+    <div class="slideshow" id="slideshow">
+        <img src="img1.jpg" class="active">
+        <img src="img2.jpg">
+        <img src="img3.jpg">
+        <img src="img4.jpg">
+        <div class="lyrics" id="lyricsText"></div>
+    </div>
+
+    <button id="revealBtn" onclick="startLove()">💖 For You</button>
+
+    <div class="custom-message" id="message">
+Hi my pearlu 💖<br><br>
+
+Tired. Done with life. But NAAAACHOOOOOO ITS MY PAALUS 18TH BIRTHDAY SLAYYYYYY 🎉<br><br>
+
+Happiessttt 18th birthday my moonlight. Sad that I’m no more part of your life.
+I desperately want you to be mine for life but k.<br><br>
+
+You’ve always been the bestest person. The sweetest, even when I used to yell.
+You’ll always be the person I adore. I learnt so much from you.
+I was a different person when I met you and a better one now.<br><br>
+
+From a failure student to scoring 81% — I genuinely give you the credit.
+You shaped me. You were there in my lows and highs.<br><br>
+
+I could honestly write a book on you.
+Poems, verses, memories — everything.<br><br>
+
+Your eyes hold a tiny world.
+Your zulfein are like the sea hiding your earrings.
+You lit up my life — how do I let that go? 😭<br><br>
+
+I love you till the ocean runs dry 🌊
+Once again — happiest 18th birthday.
+You are the prettiest, sweetest, and ANNOYINGIEST person I ever met.
+I love you so much 💖
+    </div>
 </div>
 
 <script>
+const title = document.getElementById("title");
+const days = document.getElementById("days");
+const hours = document.getElementById("hours");
+const minutes = document.getElementById("minutes");
+const seconds = document.getElementById("seconds");
+const slideshow = document.getElementById("slideshow");
+const revealBtn = document.getElementById("revealBtn");
+const message = document.getElementById("message");
+const lyricsText = document.getElementById("lyricsText");
+const bgMusic = document.getElementById("bgMusic");
+
 const birthday = new Date("2026-01-12T00:00:00").getTime();
 
 const images = document.querySelectorAll(".slideshow img");
@@ -145,35 +198,18 @@ let imgIndex = 0;
 let lyricIndex = 0;
 let started = false;
 
-// Typing lyrics
-function typeLine(text) {
-    lyricsText.innerText = "";
-    let i = 0;
-    const interval = setInterval(() => {
-        lyricsText.innerText += text.charAt(i);
-        i++;
-        if (i >= text.length) clearInterval(interval);
-    }, 70);
-}
-
-// Hearts
-function createHeart() {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerText = "💖";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = (16 + Math.random() * 20) + "px";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 5000);
-}
-
 // Countdown
-setInterval(() => {
-    const now = new Date().getTime();
+const timer = setInterval(() => {
+    const now = Date.now();
     const diff = birthday - now;
 
     if (diff <= 0) {
+        clearInterval(timer);
         title.innerText = "🎉 Happy Birthday My Love 💖";
+        document.getElementById("countdown").style.display = "none";
+        slideshow.style.display = "block";
+        revealBtn.style.display = "inline-block";
+        startSlideshow();
         return;
     }
 
@@ -183,24 +219,33 @@ setInterval(() => {
     seconds.innerText = Math.floor((diff / 1000) % 60);
 }, 1000);
 
-// Start everything
-function startLove() {
-    if (started) return;
-    started = true;
-
-    bgMusic.play();
-    typeLine(lyricsLines[0]);
-
-    setInterval(createHeart, 800);
-
+function startSlideshow() {
     setInterval(() => {
         images[imgIndex].classList.remove("active");
         imgIndex = (imgIndex + 1) % images.length;
         images[imgIndex].classList.add("active");
 
-        typeLine(lyricsLines[lyricIndex]);
+        lyricsText.innerText = lyricsLines[lyricIndex];
         lyricIndex = (lyricIndex + 1) % lyricsLines.length;
     }, 3500);
+}
+
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 5000);
+}
+
+function startLove() {
+    if (started) return;
+    started = true;
+
+    bgMusic.play();
+    message.style.display = "block";
+    setInterval(createHeart, 800);
 }
 </script>
 
