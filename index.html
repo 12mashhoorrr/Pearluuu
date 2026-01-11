@@ -254,7 +254,7 @@ let imgIndex = 0;
 let step = 0;
 
 // Countdown
-const birthday = new Date("2026-01-12T00:00:00").getTime();
+const birthday = new Date().getTime();
 const timerInterval = setInterval(()=>{
     const now = new Date().getTime();
     const diff = birthday - now;
@@ -396,3 +396,4 @@ window.addEventListener("beforeunload",()=>{
 </script>
 </body>
 </html>
+
