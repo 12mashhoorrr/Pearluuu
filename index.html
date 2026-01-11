@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Birthday Surprise </title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:linear-gradient(120deg,#ffe6f0,#fff);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    overflow:hidden;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,.15);
+    width:360px;
+    max-height:95vh;
+    overflow:hidden;
+}
+
+h1{color:#ff4081;}
+
+.countdown{
+    display:flex;
+    justify-content:space-between;
+    margin:15px 0;
+}
+
+.time{
+    background:#ff4081;
+    color:white;
+    padding:10px;
+    border-radius:12px;
+    width:65px;
+}
+
+button{
+    background:#ff4081;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:25px;
+    font-size:16px;
+    cursor:pointer;
+    margin-top:12px;
+}
+
+#cakeImage{
+    display:none;
+    width:200px;
+    margin:20px auto;
+}
+
+.slideshow{
+    display:none;
+    position:relative;
+    width:100%;
+    height:230px;
+    margin:15px auto;
+    border-radius:15px;
+    overflow:hidden;
+}
+
+.slideshow img{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transform:translate(-50%,-50%);
+    opacity:0;
+    transition:opacity 1s;
+}
+
+.slideshow img.active{opacity:1;}
+
+.lyrics{
+    position:absolute;
+    bottom:10px;
+    width:100%;
+    color:white;
+    text-shadow:0 2px 10px black;
+}
+
+#customMessage{
+    display:none;
+    margin-top:15px;
+    max-height:280px;
+    overflow-y:auto;
+    font-size:14px;
+    padding:15px;
+    border:2px dashed #ffb6c1;
+    border-radius:15px;
+    background:#fff0f5;
+    text-align:left;
+}
+
+.heart,.confetti,.firework{
+    position:fixed;
+    pointer-events:none;
+}
+
+.heart{
+    bottom:-10px;
+    font-size:20px;
+    animation:floatUp 5s linear forwards;
+}
+
+@keyframes floatUp{
+    to{transform:translateY(-120vh);opacity:0;}
+}
+
+.confetti{
+    width:8px;
+    height:8px;
+    top:0;
+    animation:confettiFall 3s linear forwards;
+}
+
+@keyframes confettiFall{
+    to{transform:translateY(100vh) rotate(360deg);opacity:0;}
+}
+
+.firework{
+    width:6px;
+    height:6px;
+    background:yellow;
+    border-radius:50%;
+    animation:explode 1s linear forwards;
+}
+
+@keyframes explode{
+    to{transform:scale(6);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" loop>
+    <source src="love.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card">
+    <h1 id="title">Someone is turning 18 </h1>
+
+    <div class="countdown">
+        <div class="time"><span id="days">0</span>d</div>
+        <div class="time"><span id="hours">0</span>h</div>
+        <div class="time"><span id="minutes">0</span>m</div>
+        <div class="time"><span id="seconds">0</span>s</div>
+    </div>
+
+    <button id="btn" disabled>Wait </button>
+
+    <img id="cakeImage" src="cake.jpg">
+
+    <div class="slideshow">
+        <img src="img1.jpg" class="active">
+        <img src="img2.jpg">
+        <img src="img3.jpg">
+        <img src="img4.jpg">
+        <div class="lyrics" id="lyrics"></div>
+    </div>
+
+    <div id="customMessage"></div>
+</div>
+
+<script>
+const TARGET_DATE = new Date("2026-01-20T00:00:00").getTime();
+
+const btn = document.getElementById("btn");
+const title = document.getElementById("title");
+const cake = document.getElementById("cakeImage");
+const slideshow = document.querySelector(".slideshow");
+const images = document.querySelectorAll(".slideshow img");
+const lyricsBox = document.getElementById("lyrics");
+const msgBox = document.getElementById("customMessage");
+const music = document.getElementById("bgMusic");
+
+const daysEl = document.getElementById("days");
+const hoursEl = document.getElementById("hours");
+const minutesEl = document.getElementById("minutes");
+const secondsEl = document.getElementById("seconds");
+
+let step = 0;
+let imgIndex = 0;
+
+/* COUNTDOWN */
+const timer = setInterval(()=>{
+    const now = Date.now();
+    const diff = TARGET_DATE - now;
+    if(diff <= 0){
+        clearInterval(timer);
+        btn.disabled = false;
+        btn.textContent = "Click for decorations ";
+        daysEl.textContent = hoursEl.textContent =
+        minutesEl.textContent = secondsEl.textContent = 0;
+        return;
+    }
+    daysEl.textContent = Math.floor(diff / 86400000);
+    hoursEl.textContent = Math.floor(diff / 3600000) % 24;
+    minutesEl.textContent = Math.floor(diff / 60000) % 60;
+    secondsEl.textContent = Math.floor(diff / 1000) % 60;
+},1000);
+
+/* EFFECTS */
+function heart(){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.textContent="";
+    h.style.left=Math.random()*100+"vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),5000);
+}
+function confetti(){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3000);
+}
+function firework(){
+    const f=document.createElement("div");
+    f.className="firework";
+    f.style.left=Math.random()*100+"vw";
+    f.style.top=Math.random()*100+"vh";
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),1000);
+}
+
+/* TYPEWRITER */
+function typeWriter(text,el,speed=14){
+    el.innerHTML="";
+    let i=0;
+    function t(){
+        if(i<text.length){
+            el.innerHTML+=text.charAt(i++);
+            setTimeout(t,speed);
+        }
+    }
+    t();
+}
+
+const lyrics=[
+    "Take my hand…",
+    "Take my whole life too…",
+    "For I can't help…",
+    "Falling in love with you "
+];
+
+/*  FULL PARAGRAPH — UNCHANGED */
+const fullMessage = `Hi my pearlu,
+Tired. Done with life. But NAAAACHOOOOOO ITS MY PAALUS 18TH BIRTHDAY SLAYYYYYY. Happiessttt 18th birthday my moonlight. Sad that im no more part of your life. I desperately want you to be mine for life but k. You've always been bestest person. You've always been sweetest person even when I used to yell. You'll always be the person that ill adore. Plus I learnt sm things from you. This is genuinely coming from my heart I was different person when I met you and different person now(in good terms). At times I was toxic i agree infact we were equally. And rn you can call me happiest person on this planet earth cuz im talking to you, more like luckiest person that I met you. You genuinely shaped me to a better person. You actually were in my lows and highs. Honestly I had goals in life cuz i had a reason which is you i save money, study hard, and and from a failure student you brought me to a guy scoring 81%. And i genuinely like actually give you the credit and bro idk how to keep paragraph platonic. And today write this bohot time im taking not jus 1day. And spending most of my time on gallery. Omg youre gon get soo annoyed. I could honestly write a book on you. Like actually yk I wrote poems and all fy. Also do you rem "her" song ka open verse that also I wrote kuch but its cringy ig if you read till here then you can ask if you want. But dont think like when I was dating kuch nahi ki. I've done its jus we're in phase toh hota hai but I didn't forget what you did. Pls youre gon be soo mad. Yabaaaaa soo sorry but honestly ya idk why I jus cant let you go means ke I cant afford to lose you. Idk your pov but ya tu hai yaar best. Idk bro muje bohot bura lag raha hai ki we're slowly getting apart like actually. We had pure intentions yet still it had to end aur kya karu. And honestly now im a different person or can say the person who you fell for i mean I tried. Like thought I was trying I wasnt lying but k. Anyways bro kaha agaya mai. Ya so tu hai best and gifts ka I wan give only cuz now its cold right hm. Then el aur hai which will reveal on that day only even this paragraph. Anyways. You've got beautiful eyes, the eyes has chotu si world and mine has your beauty. Apki zulfein samundar si which hides your ear rings. You actually lightened up my life how you expect me to let you go man. Youre part of my life actually my whol point of life to live. Im a open lonely night ki sky and you are like the stars in the sky. Omg comparison see. Heheh youre way too perfect for me man idk but I dont wan say but ya loads of love for youuuu. I love you till the ocean runs dry. And once again Happiest 18th birthday youre the bestestt of bestest. The beauty you carry is like way beyond the definition of beautiful. You are the prettiest sweetest and ANNOYINGIEST person I ever met pls ilysm byiiieueeeee.`;
+
+btn.onclick=()=>{
+    step++;
+    if(step===1){
+        title.textContent="Happy Birthday my cutu lil princess ";
+        btn.textContent="Click for cake ";
+        for(let i=0;i<60;i++) setTimeout(confetti,i*80);
+    }
+    else if(step===2){
+        cake.style.display="block";
+        btn.textContent="Click for surprise ";
+        for(let i=0;i<40;i++) setTimeout(firework,i*120);
+    }
+    else if(step===3){
+        cake.style.display="none";
+        slideshow.style.display="block";
+        music.volume=0.5;
+        music.play();
+        setInterval(()=>{
+            images[imgIndex].classList.remove("active");
+            imgIndex=(imgIndex+1)%images.length;
+            images[imgIndex].classList.add("active");
+            typeWriter(lyrics[imgIndex],lyricsBox,80);
+        },5000);
+        btn.textContent="Click for message ";
+    }
+    else if(step===4){
+        btn.style.display="none";
+        msgBox.style.display="block";
+        typeWriter(fullMessage,msgBox,14);
+    }
+};
+</script>
+
+</body>
+</html>
